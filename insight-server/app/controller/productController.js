@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
-const Product = require('./model');
+const Product = require('../model/productModel');
 
 const getProducts = async (req, res, next) => {
   try {
@@ -35,11 +35,11 @@ const postProducts = async (req, res, next) => {
         try {
           let product = new Product({...payload, image_url: filename})
           await product.save()
-          return res.json(product);
+          return res.status(201).json(product);
         } catch(err) {
           fs.unlinkSync(target_path);
           if(err && err.name === 'ValidationError'){
-            return res.json({
+            return res.status(400).json({
               error: 1,
               message: err.message,
               fields: err.errors
@@ -52,15 +52,15 @@ const postProducts = async (req, res, next) => {
       src.on('error', async() => {
         next(err);
       });
-
+      
     } else {
       let product = new Product(payload);
       await product.save();
-      return res.json(product);
+      return res.status(201).json(product);
     }
   } catch(err) {
     if (err && err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -99,12 +99,14 @@ const putUpdateProducts = async (req, res, next) => {
             new: true,
             runValidators: true
           });
-          return res.json(product);
+          product.image_url = filename;
+          await product.save()
+          return res.status(200).json(product);
 
         } catch(err) {
           fs.unlinkSync(target_path);
           if(err && err.name === 'ValidationError'){
-            return res.json({
+            return res.status(400).json({
               error: 1,
               message: err.message,
               fields: err.errors
@@ -123,11 +125,11 @@ const putUpdateProducts = async (req, res, next) => {
         new: true,
         runValidators: true
       });
-      return res.json(product);
+      return res.status(200).json(product);
     }
   } catch(err) {
     if (err && err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -138,15 +140,22 @@ const putUpdateProducts = async (req, res, next) => {
 };
 
 const deleteProductByid = async (req, res, next) => {
-  const { id } = req.params;
-
   try {
-    let result = await Product.findByIdAndDelete(id);
+    let result = await Product.findByIdAndDelete(req.params.id);
     let currentImage = `${config.rootpath}/public/images/products/${result.image_url}`;
-    if(fs.existsSync(currentImage)) {
+
+    console.log("config.rootpath:", config.rootpath);
+    console.log("result.image_url:", result.image_url);
+    console.log("currentImage:", currentImage);
+
+    if (fs.existsSync(currentImage)) {
       fs.unlinkSync(currentImage);
-    };
+      console.log("Image deleted successfully");
+    } else {
+      console.log("Image not found");
+    }
     return res.json(result);
+    
   } catch(err) {
     next(err);
   }
