@@ -1,5 +1,5 @@
 const mongoose = require ('mongoose');
-const Schema = mongoose.Schema;
+const { model, Schema} = mongoose;
 
 const tagSchema = Schema ({
   name: {
@@ -10,6 +10,6 @@ const tagSchema = Schema ({
   }
 });
 
-const Tag = mongoose.model('Tag', tagSchema);
+const Tag = model('Tag', tagSchema);
 
 module.exports = Tag;

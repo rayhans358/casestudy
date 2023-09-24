@@ -3,8 +3,8 @@ const productRoute = require ('./productRouter');
 const categoryRoute = require('./categoryRouter');
 const tagRoute = require ('./tagRouter');
 
-router.use('/api', productRoute);
-router.use('/api', categoryRoute);
-router.use('/api', tagRoute);
+router.use('/products', productRoute);
+router.use('/categories', categoryRoute);
+router.use('/tags', tagRoute);
 
 module.exports = router;

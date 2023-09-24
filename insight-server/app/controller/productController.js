@@ -2,16 +2,47 @@ const path = require('path');
 const fs = require('fs');
 const config = require('../config');
 const Product = require('../model/productModel');
+const Category = require('../model/categoryModel');
+const Tag = require('../model/tagModel');
 
 const getProducts = async (req, res, next) => {
   try {
-    let { skip = 0, limit = 10 } = req.query;
+    let { search, skip = 0, limit = 10, category = '', tags = [] } = req.query;
+    let criteria = {};
 
+    if (search) {
+      criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
+    }
+
+    if (category.length) {
+      let categoryResult = await Category.findOne({name: {$regex: new RegExp(category, 'i')} });
+
+      if (categoryResult) {
+        criteria = { ...criteria, category: categoryResult._id }
+      }
+    }
+
+    if (tags.length) {
+      let tagsResult = await Tag.find({name: {$in: tags}});
+
+      if (tagsResult.length > 0) {
+        criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
+      }
+    }
+
+    let count = await Product.countDocuments(criteria);
+
+    console.log(criteria);
     let product = await Product
-    .find()
+    .find(criteria)
     .skip(parseInt(skip))
-    .limit(parseInt(limit));
-    return res.json(product);
+    .limit(parseInt(limit))
+    .populate('category')
+    .populate('tags')
+    return res.json({
+      data: product,
+      count
+    });
   } catch (err) {
     next(err);
   }
@@ -20,6 +51,28 @@ const getProducts = async (req, res, next) => {
 const postProducts = async (req, res, next) => {
   try{
     let payload = req.body;
+
+    if (payload.category) {
+      let category = 
+        await Category
+        .findOne({name: {$regex: payload.category, $options: 'i'}});
+      if (category) {
+        payload = {...payload, category: category._id};
+      } else {
+        delete payload.category;
+      }
+    }
+
+    if (payload.tags && payload.tags.length > 0) {
+      let tags = 
+        await Tag
+        .find({name: {$in: payload.tags}});
+      if (tags.length) {
+        payload = {...payload, tags: tags.map(tag => tag._id)};
+      } else {
+        delete payload.tags;
+      }
+    }
 
     if(req.file) {
       let temp_path = req.file.path;
@@ -74,6 +127,31 @@ const putUpdateProducts = async (req, res, next) => {
   try{
     let payload = req.body;
     let { id } = req.params;
+
+    if (payload.category) {
+      let category = 
+        await Category
+        .findOne({name: {$regex: payload.category, $options: 'i'}});
+      if (category) {
+        payload = {...payload, category: category._id};
+      } else {
+        delete payload.category;
+      }
+    }
+
+    if (payload.tags && payload.tags.length > 0) {
+      let tags = 
+      await Tag
+      .find({name: {$in: payload.tags}});
+        console.log(payload.tags);
+        console.log(tags.length);
+        console.log(payload.tags.length);
+      if (tags.length) {
+        payload = {...payload, tags: tags.map(tag => tag._id)};
+      } else {
+        delete payload.tags;
+      }
+    }
     
     if(req.file) {
       let temp_path = req.file.path;
@@ -100,7 +178,7 @@ const putUpdateProducts = async (req, res, next) => {
             runValidators: true
           });
           product.image_url = filename;
-          await product.save()
+          await product.save();
           return res.status(200).json(product);
 
         } catch(err) {
