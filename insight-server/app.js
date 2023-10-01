@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const indexRouter = require('./app/router/index');
+const {decodeToken} = require('./app/middleware/passport-jwt-strategy');
 
 var app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(decodeToken());
 
 app.use(indexRouter);
 //home
