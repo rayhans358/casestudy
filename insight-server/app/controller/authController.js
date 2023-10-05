@@ -8,12 +8,14 @@ const { getToken } = require('../../utils/index');
 const register = async(req, res, next) => {
   try {
     const payload = req.body;
+    console.log(payload, '<<<< Log Payload');
     let user = new User (payload);
-    await user.save();
     console.log(user, '<<<< Log User');
+    await user.save();
     return res.json(user);
 
   } catch (err) {
+    console.log(err, '<<<< Log Error');
     if (err && err.name === 'ValidationError') {
       return res.json({
         error: 1,
@@ -44,7 +46,6 @@ const localStrategy = async (email, password, done) => {
 }
 
 const login = (req, res, next) => {
-  console.log('<<< line 47');
   passport.authenticate('local', async function(err, user) {
     if(err) return next (err);
 
@@ -86,7 +87,6 @@ const logout = async (req,res, next) => {
 }
 
 const me = (req, res, next) => {
-  console.log('Line 89');
   if (!req.user) {
     res.json({
       error: 1,
