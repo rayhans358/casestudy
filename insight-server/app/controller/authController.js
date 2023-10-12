@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const { getToken } = require('../../utils/index');
+const { getToken } = require('../../utils/tokenUtils');
 
 const register = async(req, res, next) => {
   try {

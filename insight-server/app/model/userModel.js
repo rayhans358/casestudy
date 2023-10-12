@@ -1,6 +1,6 @@
 const mongoose = require ('mongoose');
 const { Schema, model } = mongoose;
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+// const AutoIncrement = require('mongoose-sequence')(mongoose);
 const bcrypt = require('bcrypt');
 
 

@@ -1,9 +1,19 @@
 const router = require('express').Router();
 const tagController = require('../controller/tagController');
+const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
 router.get('/', tagController.getTag);
-router.post('/', tagController.postTag);
-router.put('/:id', tagController.putUpdateTag);
-router.delete('/:id', tagController.deleteTagByid);
+router.post('/', 
+  checkAuthorization('create', 'Tag'),
+  tagController.postTag
+);
+router.put('/:id', 
+  checkAuthorization('update', 'Tag'),
+  tagController.putUpdateTag
+);
+router.delete('/:id', 
+  checkAuthorization('delete', 'Tag'),
+  tagController.deleteTagByid
+);
 
 module.exports = router;

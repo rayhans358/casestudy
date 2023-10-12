@@ -1,4 +1,4 @@
-const { getToken } = require("../../utils")
+const { getToken } = require("../../utils/tokenUtils")
 const jwt = require('jsonwebtoken');
 const config = require("../config");
 const User = require("../model/userModel");
@@ -13,6 +13,9 @@ function decodeToken() {
       };
       
       req.user = jwt.verify(token, config.secretkey);
+
+      const decodedToken = jwt.decode(token, { complete: true });
+      console.log(decodedToken, '<<<< Decode Token');
 
       let user = await User.findOne({token: {$in: [token]} });
       if (!user) {
