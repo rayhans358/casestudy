@@ -56,7 +56,6 @@ userSchema.path('email').validate(async function(value){
 const HASH_ROUND = 10;
 userSchema.pre('save', function(next){
   this.password = bcrypt.hashSync(this.password, HASH_ROUND);
-  console.log(this.password, '<<<< Log Pass');
   next();
 });
 

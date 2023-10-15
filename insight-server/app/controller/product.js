@@ -32,7 +32,6 @@ const getProducts = async (req, res, next) => {
 
     let count = await Product.countDocuments(criteria);
 
-    console.log(criteria);
     let product = await Product
     .find(criteria)
     .skip(parseInt(skip))
@@ -143,9 +142,6 @@ const putUpdateProducts = async (req, res, next) => {
       let tags = 
       await Tag
       .find({name: {$in: payload.tags}});
-        // console.log(payload.tags);
-        // console.log(tags.length);
-        // console.log(payload.tags.length);
       if (tags.length) {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
@@ -222,15 +218,9 @@ const deleteProductByid = async (req, res, next) => {
     let result = await Product.findByIdAndDelete(req.params.id);
     let currentImage = `${config.rootpath}/public/images/products/${result.image_url}`;
 
-    console.log("config.rootpath:", config.rootpath);
-    console.log("result.image_url:", result.image_url);
-    console.log("currentImage:", currentImage);
-
     if (fs.existsSync(currentImage)) {
       fs.unlinkSync(currentImage);
-      console.log("Image deleted successfully");
     } else {
-      console.log("Image not found");
     }
     return res.json(result);
     

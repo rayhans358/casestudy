@@ -8,14 +8,11 @@ const { getToken } = require('../../utils/tokenUtils');
 const register = async(req, res, next) => {
   try {
     const payload = req.body;
-    console.log(payload, '<<<< Log Payload');
     let user = new User (payload);
-    console.log(user, '<<<< Log User');
     await user.save();
     return res.json(user);
 
   } catch (err) {
-    console.log(err, '<<<< Log Error');
     if (err && err.name === 'ValidationError') {
       return res.json({
         error: 1,

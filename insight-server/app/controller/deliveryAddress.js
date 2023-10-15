@@ -41,7 +41,6 @@ const putUpdateDeliveryAddress = async (req, res, next) => {
   try {
     let payload = req.body;
     let { id } = req.params;
-    // let user = req.user;
     let address = await DeliveryAddress.findById(id);
 
     address = await DeliveryAddress.findByIdAndUpdate(id, payload, { new: true }
