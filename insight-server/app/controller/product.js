@@ -143,9 +143,9 @@ const putUpdateProducts = async (req, res, next) => {
       let tags = 
       await Tag
       .find({name: {$in: payload.tags}});
-        console.log(payload.tags);
-        console.log(tags.length);
-        console.log(payload.tags.length);
+        // console.log(payload.tags);
+        // console.log(tags.length);
+        // console.log(payload.tags.length);
       if (tags.length) {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {

@@ -11,5 +11,9 @@ router.put('/:id',
   checkAuthorization('update', 'DeliveryAddress'),
   deliveryAddressController.putUpdateDeliveryAddress
 );
+router.delete('/:id',
+  checkAuthorization('delete', 'DeliveryAddress'),
+  deliveryAddressController.deleteDeliveryAddressById
+);
 
 module.exports = router;

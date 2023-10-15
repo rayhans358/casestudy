@@ -1,10 +1,9 @@
-const { policyFor } = require("../../utils/policies");
 const DeliveryAddress = require("../model/deliveryAddress");
 
 const getDeliveryAddress = async (req, res, next) => {
   try {
-    let addresses = await DeliveryAddress.find({});
-    res.json(addresses);
+    let address = await DeliveryAddress.find();
+    res.json(address);
 
   } catch (err) {
     if (err & err.name === 'ValidationError') {
@@ -39,19 +38,11 @@ const postDeliveryAddress = async (req, res, next) => {
 }
 
 const putUpdateDeliveryAddress = async (req, res, next) => {
-  
   try {
+    let payload = req.body;
     let { id } = req.params;
-    const payload = req.body;
+    // let user = req.user;
     let address = await DeliveryAddress.findById(id);
-    const policy = policyFor(req.user);
-
-    if (!policy.can('update', 'DeliveryAddress')) {
-      return res.json({
-        error: 1,
-        message: 'You are not allowed to update DeliveryAddress'
-      });
-    }
 
     address = await DeliveryAddress.findByIdAndUpdate(id, payload, { new: true }
     );
@@ -69,8 +60,24 @@ const putUpdateDeliveryAddress = async (req, res, next) => {
   }
 }
 
+const deleteDeliveryAddressById = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    await DeliveryAddress.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      error: 0,
+      message: 'DeliveryAddress deleted successfully',
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getDeliveryAddress,
   postDeliveryAddress,
-  putUpdateDeliveryAddress
+  putUpdateDeliveryAddress,
+  deleteDeliveryAddressById
 }
