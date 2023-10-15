@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const tagController = require('../controller/tagController');
+const tagController = require('../controller/tag');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
 router.get('/', tagController.getTag);

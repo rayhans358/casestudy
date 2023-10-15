@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
 const os = require('os');
-const productController = require('../controller/productController');
+const productController = require('../controller/product');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
 router.get('/', productController.getProducts);

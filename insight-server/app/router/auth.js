@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const authController = require('../controller/authController');
+const authController = require('../controller/auth');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
