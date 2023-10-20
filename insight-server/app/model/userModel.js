@@ -1,10 +1,8 @@
 const mongoose = require ('mongoose');
 const { Schema, model } = mongoose;
-// const AutoIncrement = require('mongoose-sequence')(mongoose);
 const bcrypt = require('bcrypt');
 
-
-let userSchema = Schema ({
+let userSchema = Schema({
   full_name: {
     type: String,
     required: [true, 'Field name harus diisi'],
@@ -70,8 +68,6 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
-
-// userSchema.plugin(AutoIncrement, { inc_field: 'customer_id' });
 
 const User = model('User', userSchema);
 

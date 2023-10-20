@@ -1,6 +1,6 @@
 const { Schema, model } =require('mongoose');
 
-const deliveryAddressSchema = Schema ({
+const deliveryAddressSchema = Schema({
   name: {
     type: String,
     required: [true, 'Field name tidak boleh kosong'],

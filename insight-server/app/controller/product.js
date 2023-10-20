@@ -220,7 +220,6 @@ const deleteProductByid = async (req, res, next) => {
 
     if (fs.existsSync(currentImage)) {
       fs.unlinkSync(currentImage);
-    } else {
     }
     return res.json(result);
     

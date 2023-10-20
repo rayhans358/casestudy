@@ -1,7 +1,7 @@
 const mongoose = require ('mongoose');
 const { model, Schema} = mongoose;
 
-const tagSchema = Schema ({
+const tagSchema = Schema({
   name: {
     type: String,
     minlength: [3, 'Field tag minimal 3 karakter'],
