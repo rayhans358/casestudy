@@ -3,10 +3,11 @@ const Tag = require('../model/tagModel');
 const getTag = async (req, res, next) => {
   try {
     let tag = await Tag.find();
-    return res.json(tag);
+    return res.status(200).json(tag);
+
   } catch (err) {
     if (err & err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -21,11 +22,11 @@ const postTag = async (req, res, next) => {
     let payload = req.body;
     let tag = new Tag(payload);
     await tag.save();
-    return res.json(tag);
+    return res.status(201).json(tag);
 
   } catch (err) {
     if (err & err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -41,11 +42,11 @@ const putUpdateTag = async (req, res, next) => {
   try {
     let payload = req.body;
     let tag = await Tag.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
-    return res.json(tag);
+    return res.status(200).json(tag);
 
   } catch (err) {
     if (err & err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -60,11 +61,11 @@ const deleteTagByid = async (req, res, next) => {
 
   try {
     let tag = await Tag.findByIdAndDelete(id);
-    return res.json(tag);
+    return res.status(200).json(tag);
 
   } catch (err) {
     if (err & err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors

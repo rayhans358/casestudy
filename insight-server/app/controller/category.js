@@ -3,11 +3,11 @@ const Category = require('../model/categoryModel');
 const getCategory = async (req, res, next) => {
   try {
     let category = await Category.find();
-    return res.json(category);
+    return res.status(200).json(category);
     
   } catch (err) {
     if (err && err.name === 'ValidationError') {
-      return res.json ({
+      return res.status(400).json ({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -22,11 +22,11 @@ const postCategory = async (req, res, next) => {
     let payload = req.body;
     let category = new Category(payload);
     await category.save();
-    return res.json(category);
+    return res.status(201).json(category);
 
   } catch (err) {
     if (err && err.name === 'ValidationError') {
-      return res.json ({
+      return res.status(400).json ({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -42,11 +42,11 @@ const putUpdateCategory = async (req, res, next) => {
   try {
     let payload = req.body;
     let category = await Category.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
-    return res.json(category);
+    return res.status(200).json(category);
 
   } catch (err) {
     if (err && err.name === 'ValidationError') {
-      return res.json ({
+      return res.status(400).json ({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -61,11 +61,11 @@ const deleteCategoryByid = async (req,res, next) => {
 
   try {
     let category = await Category.findByIdAndDelete(id);
-    return res.json(category);
+    return res.status(200).json(category);
 
   } catch (err) {
     if (err && err.name === 'ValidationError') {
-      return res.json ({
+      return res.status(400).json ({
         error: 1,
         message: err.message,
         fields: err.errors

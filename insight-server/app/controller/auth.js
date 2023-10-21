@@ -10,11 +10,11 @@ const register = async(req, res, next) => {
     const payload = req.body;
     let user = new User (payload);
     await user.save();
-    return res.json(user);
+    return res.status(201).json(user);
 
   } catch (err) {
     if (err && err.name === 'ValidationError') {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: err.message,
         fields: err.errors
@@ -47,7 +47,7 @@ const login = (req, res, next) => {
     if(err) return next (err);
 
     if (!user) {
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: 'Email or Password incorect'
       })
@@ -57,7 +57,7 @@ const login = (req, res, next) => {
 
     await User.findByIdAndUpdate(user._id, {$push: {token: signed}});
 
-    res.json({
+    res.status(200).json({
       message: 'Login Successfully',
       user,
       token: signed
@@ -71,13 +71,13 @@ const logout = async (req,res, next) => {
   let user = await User.findOneAndUpdate({token: {$in: [token]}}, {$pull: {token: token}}, {useFindAndModify: false});
 
   if (!token || !user) {
-    res.json({
+    res.status(400).json({
       error: 1,
       message: 'User Not Found!!!'
     });
   }
 
-  return res.json({
+  return res.status(200).json({
     error: 0,
     message: 'Logout berhasil'
   });
@@ -85,13 +85,13 @@ const logout = async (req,res, next) => {
 
 const me = (req, res, next) => {
   if (!req.user) {
-    res.json({
+    res.status(400).json({
       error: 1,
       message: `You're not login or token expired`
     })
   }
 
-  res.json(req.user);
+  res.status(200).json(req.user);
 }
 
 module.exports = {

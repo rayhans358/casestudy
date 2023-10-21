@@ -38,10 +38,11 @@ const getProducts = async (req, res, next) => {
     .limit(parseInt(limit))
     .populate('category')
     .populate('tags')
-    return res.json({
+    return res.status(200).json({
       data: product,
       count
     });
+
   } catch (err) {
     next(err);
   }
@@ -110,6 +111,7 @@ const postProducts = async (req, res, next) => {
       await product.save();
       return res.status(201).json(product);
     }
+    
   } catch(err) {
     if (err && err.name === 'ValidationError') {
       return res.status(400).json({
@@ -221,7 +223,7 @@ const deleteProductByid = async (req, res, next) => {
     if (fs.existsSync(currentImage)) {
       fs.unlinkSync(currentImage);
     }
-    return res.json(result);
+    return res.status(200).json(result);
     
   } catch(err) {
     next(err);
