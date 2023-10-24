@@ -67,6 +67,11 @@ const getOrder = async(req, res, next) => {
       .limit(parseInt(limit))
       .populate('order_items')
       .sort('-createdAt');
+    return res.status(200).json({
+      data: orders.map(order => order.toJSON({virtuals: true})),
+      count
+    });
+
   } catch (err) {
     if (err & err.name === 'ValidationError') {
       return res.status(400).json({
