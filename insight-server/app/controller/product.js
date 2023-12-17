@@ -48,6 +48,49 @@ const getProducts = async (req, res, next) => {
   }
 };
 
+const getProductsById = async (req, res, next) => {
+  try {
+    let { search, skip = 0, limit = 10, category = '', tags = [] } = req.query;
+    let criteria = {_id: req.params.id};
+
+    if (search) {
+      criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
+    }
+
+    if (category.length) {
+      let categoryResult = await Category.findOne({name: {$regex: new RegExp(category, 'i')} });
+
+      if (categoryResult) {
+        criteria = { ...criteria, category: categoryResult._id }
+      }
+    }
+
+    if (tags.length) {
+      let tagsResult = await Tag.find({name: {$in: tags}});
+
+      if (tagsResult.length > 0) {
+        criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
+      }
+    }
+
+    let count = await Product.countDocuments(criteria);
+
+    let product = await Product
+    .find(criteria)
+    .skip(parseInt(skip))
+    .limit(parseInt(limit))
+    .populate('category')
+    .populate('tags')
+    return res.status(200).json({
+      data: product,
+      count
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 const postProducts = async (req, res, next) => {
   try{
     let payload = req.body;
@@ -232,6 +275,7 @@ const deleteProductByid = async (req, res, next) => {
 
 module.exports = {
   getProducts,
+  getProductsById,
   postProducts,
   putUpdateProducts,
   deleteProductByid

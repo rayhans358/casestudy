@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Invoice = require('./invoiceModel');
 const { model, Schema } = mongoose;
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const orderSchema = Schema({
   status: {
@@ -27,10 +26,27 @@ const orderSchema = Schema({
   order_items: [{
     type: Schema.Types.ObjectId,
     ref: 'OrderItem'
-  }]
+  }],
+
+  order_number: {
+    type: Number
+  }
 }, {timestamps: true});
 
-orderSchema.plugin(AutoIncrement, {inc_field: 'order_number'});
+// orderSchema.plugin(AutoIncrement, {inc_field: 'order_number'});
+
+orderSchema.pre('save', async function(next) {
+  if (!this.order_number && this.order_number !== 0) {
+    const highestOrder = await this.constructor.findOne({}, {}, { sort: { order_number: -1 } });
+    if (highestOrder && highestOrder.order_number !== null) {
+      this.order_number = highestOrder.order_number + 1;
+    } else {
+      this.order_number = '1';
+    }
+  }
+  next();
+});
+
 orderSchema.virtual('items_count').get(function() {
   return this.order_items.reduce((total, item) => total + parseInt(item.qty), 0)
 });

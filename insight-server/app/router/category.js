@@ -2,7 +2,10 @@ const router = require('express').Router();
 const categoryController = require('../controller/category');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
-router.get('/', categoryController.getCategory);
+router.get('/', 
+  checkAuthorization('read', 'Category'),
+  categoryController.getCategory
+);
 router.post('/',
   checkAuthorization('create', 'Category'),
   categoryController.postCategory

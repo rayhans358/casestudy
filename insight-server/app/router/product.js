@@ -4,7 +4,16 @@ const os = require('os');
 const productController = require('../controller/product');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
-router.get('/', productController.getProducts);
+router.get('/', 
+  checkAuthorization('read', 'Product'),
+  productController.getProducts
+);
+
+router.get('/', 
+  checkAuthorization('read', 'Product'),
+  productController.getProductsById
+);
+
 router.post('/', 
   multer({dest: os.tmpdir()}).single('image'),
   checkAuthorization('create', 'Product'),
@@ -16,7 +25,7 @@ router.put('/:id',
   productController.putUpdateProducts
 );
 router.delete('/:id',
-  checkAuthorization('update', 'Product'),
+  checkAuthorization('delete', 'Product'),
   productController.deleteProductByid
 );
 

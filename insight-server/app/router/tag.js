@@ -2,7 +2,10 @@ const router = require('express').Router();
 const tagController = require('../controller/tag');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
-router.get('/', tagController.getTag);
+router.get('/', 
+  checkAuthorization('read', 'Tag'),
+  tagController.getTag
+);
 router.post('/', 
   checkAuthorization('create', 'Tag'),
   tagController.postTag
