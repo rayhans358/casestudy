@@ -7,7 +7,7 @@ const Tag = require('../model/tagModel');
 
 const getProducts = async (req, res, next) => {
   try {
-    let { search, skip = 0, limit = 10, category = '', tags = [] } = req.query;
+    let { search, category = '', tags = [] } = req.query;
     let criteria = {};
 
     if (search) {
@@ -34,8 +34,8 @@ const getProducts = async (req, res, next) => {
 
     let product = await Product
     .find(criteria)
-    .skip(parseInt(skip))
-    .limit(parseInt(limit))
+    // .skip(parseInt(skip))
+    // .limit(parseInt(limit))
     .populate('category')
     .populate('tags')
     return res.status(200).json({
@@ -50,7 +50,7 @@ const getProducts = async (req, res, next) => {
 
 const getProductsById = async (req, res, next) => {
   try {
-    let { search, skip = 0, limit = 10, category = '', tags = [] } = req.query;
+    let { search, category = '', tags = [] } = req.query;
     let criteria = {_id: req.params.id};
 
     if (search) {
@@ -77,8 +77,8 @@ const getProductsById = async (req, res, next) => {
 
     let product = await Product
     .find(criteria)
-    .skip(parseInt(skip))
-    .limit(parseInt(limit))
+    // .skip(parseInt(skip))
+    // .limit(parseInt(limit))
     .populate('category')
     .populate('tags')
     return res.status(200).json({

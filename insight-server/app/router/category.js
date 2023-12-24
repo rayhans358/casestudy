@@ -6,6 +6,12 @@ router.get('/',
   checkAuthorization('read', 'Category'),
   categoryController.getCategory
 );
+
+router.get('/:id',
+  checkAuthorization('read', 'Category'),
+  categoryController.getCategoryById
+);
+
 router.post('/',
   checkAuthorization('create', 'Category'),
   categoryController.postCategory

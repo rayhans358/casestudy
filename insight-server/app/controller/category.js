@@ -17,6 +17,31 @@ const getCategory = async (req, res, next) => {
   }
 };
 
+const getCategoryById = async (req, res, next) => {
+  let { id } = req.params;
+
+  try {
+    let category = await Category.findById(id);
+    if (!category) {
+      return res.status(404).json({
+        error: 1,
+        message: 'Category not found'
+      });
+    }
+    return res.status(200).json(category);
+
+  } catch (err) {
+    if (err && err.name === 'ValidationError') {
+      return res.status(400).json({
+        error: 1,
+        message: err.message,
+        fields: err.errors
+      });
+    }
+    next(err);
+  }
+}
+
 const postCategory = async (req, res, next) => {
   try {
     let payload = req.body;
@@ -77,6 +102,7 @@ const deleteCategoryByid = async (req,res, next) => {
 
 module.exports = {
   getCategory,
+  getCategoryById,
   postCategory,
   putUpdateCategory,
   deleteCategoryByid
