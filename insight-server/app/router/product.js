@@ -6,7 +6,7 @@ const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
 router.get('/', 
   checkAuthorization('read', 'Product'),
-  productController.getProducts
+  productController.getAllProducts
 );
 
 router.get('/', 
@@ -19,11 +19,13 @@ router.post('/',
   checkAuthorization('create', 'Product'),
   productController.postProducts
 );
+
 router.put('/:id', 
   multer({dest: os.tmpdir()}).single('image'), 
   checkAuthorization('update', 'Product'),
   productController.putUpdateProducts
 );
+
 router.delete('/:id',
   checkAuthorization('delete', 'Product'),
   productController.deleteProductByid

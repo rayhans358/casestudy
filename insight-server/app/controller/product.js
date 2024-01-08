@@ -5,41 +5,43 @@ const Product = require('../model/productModel');
 const Category = require('../model/categoryModel');
 const Tag = require('../model/tagModel');
 
-const getProducts = async (req, res, next) => {
+const getAllProducts = async (req, res, next) => {
   try {
-    let { search, category = '', tags = [] } = req.query;
+    let { search, category, tags} = req.query;
     let criteria = {};
 
     if (search) {
       criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
     }
 
-    if (category.length) {
-      let categoryResult = await Category.findOne({name: {$regex: new RegExp(category, 'i')} });
+    if (category) {
+      let categoryResult = await Category.find({name: {$in: category} });
 
       if (categoryResult) {
-        criteria = { ...criteria, category: categoryResult._id }
+        criteria = { ...criteria, category: {$in: categoryResult.map(category => category._id)} }
+      } else {
+        criteria.category = []
       }
     }
 
-    if (tags.length) {
+    if (tags) {
       let tagsResult = await Tag.find({name: {$in: tags}});
 
       if (tagsResult.length > 0) {
         criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
+      } else {
+        criteria.tags = []
       }
     }
 
     let count = await Product.countDocuments(criteria);
 
-    let product = await Product
-    .find(criteria)
-    // .skip(parseInt(skip))
-    // .limit(parseInt(limit))
-    .populate('category')
-    .populate('tags')
+    let products = await Product
+      .find(criteria)
+      .populate('category')
+      .populate('tags')
     return res.status(200).json({
-      data: product,
+      data: products,
       count
     });
 
@@ -50,22 +52,22 @@ const getProducts = async (req, res, next) => {
 
 const getProductsById = async (req, res, next) => {
   try {
-    let { search, category = '', tags = [] } = req.query;
+    let { search, category, tags } = req.query;
     let criteria = {_id: req.params.id};
 
     if (search) {
       criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
     }
 
-    if (category.length) {
-      let categoryResult = await Category.findOne({name: {$regex: new RegExp(category, 'i')} });
+    if (category) {
+      let categoryResult = await Category.find({name: {$in: category} });
 
       if (categoryResult) {
         criteria = { ...criteria, category: categoryResult._id }
       }
     }
 
-    if (tags.length) {
+    if (tags) {
       let tagsResult = await Tag.find({name: {$in: tags}});
 
       if (tagsResult.length > 0) {
@@ -75,14 +77,12 @@ const getProductsById = async (req, res, next) => {
 
     let count = await Product.countDocuments(criteria);
 
-    let product = await Product
+    let products = await Product
     .find(criteria)
-    // .skip(parseInt(skip))
-    // .limit(parseInt(limit))
     .populate('category')
     .populate('tags')
     return res.status(200).json({
-      data: product,
+      data: products,
       count
     });
 
@@ -97,8 +97,7 @@ const postProducts = async (req, res, next) => {
 
     if (payload.category) {
       let category = 
-        await Category
-        .findOne({name: {$regex: payload.category, $options: 'i'}});
+        await Category.find({name: {$in: category} });
       if (category) {
         payload = {...payload, category: category._id};
       } else {
@@ -108,8 +107,7 @@ const postProducts = async (req, res, next) => {
 
     if (payload.tags && payload.tags.length > 0) {
       let tags = 
-        await Tag
-        .find({name: {$in: payload.tags}});
+        await Tag.find({name: {$in: payload.tags}});
       if (tags.length) {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
@@ -174,8 +172,7 @@ const putUpdateProducts = async (req, res, next) => {
 
     if (payload.category) {
       let category = 
-        await Category
-        .findOne({name: {$regex: payload.category, $options: 'i'}});
+        await Category.find({name: {$in: category} });
       if (category) {
         payload = {...payload, category: category._id};
       } else {
@@ -185,8 +182,7 @@ const putUpdateProducts = async (req, res, next) => {
 
     if (payload.tags && payload.tags.length > 0) {
       let tags = 
-      await Tag
-      .find({name: {$in: payload.tags}});
+      await Tag.find({name: {$in: payload.tags}});
       if (tags.length) {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
@@ -274,7 +270,7 @@ const deleteProductByid = async (req, res, next) => {
 };
 
 module.exports = {
-  getProducts,
+  getAllProducts,
   getProductsById,
   postProducts,
   putUpdateProducts,

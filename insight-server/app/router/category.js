@@ -2,13 +2,11 @@ const router = require('express').Router();
 const categoryController = require('../controller/category');
 const { checkAuthorization } = require('../middleware/authorizationMiddleware');
 
-router.get('/', 
-  checkAuthorization('read', 'Category'),
+router.get('/',
   categoryController.getCategory
 );
 
 router.get('/:id',
-  checkAuthorization('read', 'Category'),
   categoryController.getCategoryById
 );
 
@@ -20,6 +18,7 @@ router.put('/:id',
   checkAuthorization('update', 'Category'),
   categoryController.putUpdateCategory
 );
+
 router.delete('/:id',
   checkAuthorization('delete', 'Category'),
   categoryController.deleteCategoryByid

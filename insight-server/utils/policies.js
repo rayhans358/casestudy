@@ -10,11 +10,11 @@ const accessControl = {
     can('create', 'Product', {user_id: user._id});
     can('update', 'Product', {user_id: user._id});
     can('delete', 'Product', {user_id: user._id});
-    can('read', 'Category', {user_id: user._id});
+    can('view', 'Category');
     can('create', 'Category', {user_id: user._id});
     can('update', 'Category', {user_id: user._id});
     can('delete', 'Category', {user_id: user._id});
-    can('read', 'Tag', {user_id: user._id});
+    can('view', 'Tag');
     can('create', 'Tag', {user_id: user._id});
     can('update', 'Tag', {user_id: user._id});
     can('delete', 'Tag', {user_id: user._id});
