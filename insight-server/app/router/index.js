@@ -7,14 +7,16 @@ const deliveryAddressRoute = require('./deliveryAddress');
 const cartRoute = require('./cart');
 const orderRoute = require('./order');
 const invoiceRoute = require('./invoice');
+const regionRoute = require('./region');
 
 router.use('/auth', authRoute);
-router.use('/products', productRoute);
 router.use('/categories', categoryRoute);
-router.use('/tags', tagRoute);
-router.use('/delivery-address', deliveryAddressRoute);
 router.use('/carts', cartRoute);
-router.use('/orders', orderRoute);
+router.use('/delivery-address', deliveryAddressRoute);
 router.use('/invoices', invoiceRoute);
+router.use('/orders', orderRoute);
+router.use('/products', productRoute);
+router.use('/regions', regionRoute);
+router.use('/tags', tagRoute);
 
 module.exports = router;

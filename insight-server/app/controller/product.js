@@ -12,7 +12,7 @@ const getAllProducts = async (req, res, next) => {
 
     if (search) {
       criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
-    }
+    };
 
     if (category) {
       let categoryResult = await Category.find({name: {$in: category} });
@@ -21,8 +21,8 @@ const getAllProducts = async (req, res, next) => {
         criteria = { ...criteria, category: {$in: categoryResult.map(category => category._id)} }
       } else {
         criteria.category = []
-      }
-    }
+      };
+    };
 
     if (tags) {
       let tagsResult = await Tag.find({name: {$in: tags}});
@@ -31,8 +31,8 @@ const getAllProducts = async (req, res, next) => {
         criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
       } else {
         criteria.tags = []
-      }
-    }
+      };
+    };
 
     let count = await Product.countDocuments(criteria);
 
@@ -47,7 +47,7 @@ const getAllProducts = async (req, res, next) => {
 
   } catch (err) {
     next(err);
-  }
+  };
 };
 
 const getProductsById = async (req, res, next) => {
@@ -57,23 +57,23 @@ const getProductsById = async (req, res, next) => {
 
     if (search) {
       criteria = { ...criteria, name: {$regex: new RegExp(search, 'i')} }
-    }
+    };
 
     if (category) {
       let categoryResult = await Category.find({name: {$in: category} });
 
       if (categoryResult) {
         criteria = { ...criteria, category: categoryResult._id }
-      }
-    }
+      };
+    };
 
     if (tags) {
       let tagsResult = await Tag.find({name: {$in: tags}});
 
       if (tagsResult.length > 0) {
         criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
-      }
-    }
+      };
+    };
 
     let count = await Product.countDocuments(criteria);
 
@@ -88,7 +88,7 @@ const getProductsById = async (req, res, next) => {
 
   } catch (err) {
     next(err);
-  }
+  };
 };
 
 const postProducts = async (req, res, next) => {
@@ -102,8 +102,8 @@ const postProducts = async (req, res, next) => {
         payload = {...payload, category: category._id};
       } else {
         delete payload.category;
-      }
-    }
+      };
+    };
 
     if (payload.tags && payload.tags.length > 0) {
       let tags = 
@@ -112,8 +112,8 @@ const postProducts = async (req, res, next) => {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
         delete payload.tags;
-      }
-    }
+      };
+    };
 
     if(req.file) {
       let temp_path = req.file.path;
@@ -137,10 +137,10 @@ const postProducts = async (req, res, next) => {
               error: 1,
               message: err.message,
               fields: err.errors
-            })
-          }
+            });
+          };
           next(err);
-        }
+        };
       });
 
       src.on('error', async() => {
@@ -151,7 +151,7 @@ const postProducts = async (req, res, next) => {
       let product = new Product(payload);
       await product.save();
       return res.status(201).json(product);
-    }
+    };
     
   } catch(err) {
     if (err && err.name === 'ValidationError') {
@@ -160,9 +160,9 @@ const postProducts = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const putUpdateProducts = async (req, res, next) => {
@@ -177,8 +177,8 @@ const putUpdateProducts = async (req, res, next) => {
         payload = {...payload, category: category._id};
       } else {
         delete payload.category;
-      }
-    }
+      };
+    };
 
     if (payload.tags && payload.tags.length > 0) {
       let tags = 
@@ -187,8 +187,8 @@ const putUpdateProducts = async (req, res, next) => {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
         delete payload.tags;
-      }
-    }
+      };
+    };
     
     if(req.file) {
       let temp_path = req.file.path;
@@ -196,7 +196,6 @@ const putUpdateProducts = async (req, res, next) => {
       let filename = req.file.filename + '.' + originalExt;
       let target_path = path.resolve(config.rootpath, `public/images/products/${filename}`);
 
-      // Untuk update gambar sebelumnya
       let result = await Product.findById(id);
       let currentImage = `${config.rootpath}/public/images/products/${result.image_url}`; 
 
@@ -225,10 +224,10 @@ const putUpdateProducts = async (req, res, next) => {
               error: 1,
               message: err.message,
               fields: err.errors
-            })
-          }
+            });
+          };
           next(err);
-        }
+        };
       });
 
       src.on('error', async() => {
@@ -241,7 +240,7 @@ const putUpdateProducts = async (req, res, next) => {
         runValidators: true
       });
       return res.status(200).json(product);
-    }
+    };
   } catch(err) {
     if (err && err.name === 'ValidationError') {
       return res.status(400).json({
@@ -249,9 +248,9 @@ const putUpdateProducts = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const deleteProductByid = async (req, res, next) => {
@@ -261,12 +260,12 @@ const deleteProductByid = async (req, res, next) => {
 
     if (fs.existsSync(currentImage)) {
       fs.unlinkSync(currentImage);
-    }
+    };
     return res.status(200).json(result);
     
   } catch(err) {
     next(err);
-  }
+  };
 };
 
 module.exports = {

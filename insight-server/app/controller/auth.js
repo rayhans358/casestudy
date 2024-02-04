@@ -19,10 +19,10 @@ const register = async(req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
 
-  }
+  };
 };
 
 const localStrategy = async (email, password, done) => {
@@ -35,12 +35,13 @@ const localStrategy = async (email, password, done) => {
       if (bcrypt.compareSync(password, user.password)) {
         ( {password, ...userWithoutPassword} = user.toJSON() );
         return done(null, userWithoutPassword);
-      }
+      };
+
   } catch (err) {
     done(err,null)
-  }
+  };
   done();
-}
+};
 
 const login = (req, res, next) => {
   passport.authenticate('local', async function(err, user) {
@@ -61,9 +62,9 @@ const login = (req, res, next) => {
       message: 'Login Successfully',
       user,
       token: signed
-    })
-  })(req, res, next)
-}
+    });
+  })(req, res, next);
+};
 
 const logout = async (req,res, next) => {
   let token = getToken(req);
@@ -75,24 +76,24 @@ const logout = async (req,res, next) => {
       error: 1,
       message: 'User Not Found!!!'
     });
-  }
+  };
 
   return res.status(200).json({
     error: 0,
     message: 'Logout berhasil'
   });
-}
+};
 
 const me = (req, res, next) => {
   if (!req.user) {
     res.status(400).json({
       error: 1,
       message: `You're not login or token expired`
-    })
-  }
+    });
+  };
 
   res.status(200).json(req.user);
-}
+};
 
 module.exports = {
   register,

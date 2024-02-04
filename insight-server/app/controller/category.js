@@ -12,9 +12,9 @@ const getCategory = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const getCategoryById = async (req, res, next) => {
@@ -27,7 +27,7 @@ const getCategoryById = async (req, res, next) => {
         error: 1,
         message: 'Category not found'
       });
-    }
+    };
     return res.status(200).json(category);
 
   } catch (err) {
@@ -37,10 +37,10 @@ const getCategoryById = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
-}
+  };
+};
 
 const postCategory = async (req, res, next) => {
   try {
@@ -56,9 +56,9 @@ const postCategory = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const putUpdateCategory = async (req, res, next) => {
@@ -76,9 +76,9 @@ const putUpdateCategory = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const deleteCategoryByid = async (req,res, next) => {
@@ -95,9 +95,9 @@ const deleteCategoryByid = async (req,res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 module.exports = {

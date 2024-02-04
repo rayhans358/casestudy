@@ -6,7 +6,7 @@ const accessControl = {
     can('read', 'Product')
   },
   user(user, {can}) {
-    can('read', 'Product', {user_id: user._id});
+    can('read', 'Product');
     can('create', 'Product', {user_id: user._id});
     can('update', 'Product', {user_id: user._id});
     can('delete', 'Product', {user_id: user._id});
@@ -24,7 +24,7 @@ const accessControl = {
     can('update', 'User', {_id: user._id});
     can('read', 'Cart', {user_id: user._id});
     can('update', 'Cart', {user_id: user._id});
-    can('view', 'DeliveryAddress');
+    can('view', 'DeliveryAddress', {user_id: user._id});
     can('create', 'DeliveryAddress', {user_id: user._id});
     can('update', 'DeliveryAddress', {user_id: user._id});
     can('delete', 'DeliveryAddress', {user_id: user._id});

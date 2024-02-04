@@ -12,9 +12,9 @@ const getTag = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const getTagById = async (req, res, next) => {
@@ -27,7 +27,7 @@ const getTagById = async (req, res, next) => {
         error: 1,
         message: 'Tag not found'
       });
-    }
+    };
     return res.status(200).json(tag);
 
   } catch (err) {
@@ -37,9 +37,9 @@ const getTagById = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const postTag = async (req, res, next) => {
@@ -56,9 +56,9 @@ const postTag = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const putUpdateTag = async (req, res, next) => {
@@ -76,9 +76,9 @@ const putUpdateTag = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const deleteTagByid = async (req, res, next) => {
@@ -95,9 +95,9 @@ const deleteTagByid = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 module.exports = {

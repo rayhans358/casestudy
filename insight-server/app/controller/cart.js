@@ -16,10 +16,10 @@ const getCart = async(req, res,next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
-}
+  };
+};
 
 const putUpdateCart = async(req, res, next) => {
   try {
@@ -35,7 +35,7 @@ const putUpdateCart = async(req, res, next) => {
         name: relatedProduct.name,
         user: req.user._id,
         qty: item.qty
-      }
+      };
     });
 
     await CartItem.deleteMany({user: req.user._id});
@@ -49,7 +49,7 @@ const putUpdateCart = async(req, res, next) => {
           update: item,
           upsert: true
         }
-      }
+      };
     }));
     return res.status(200).json(cartItems);
 
@@ -60,10 +60,10 @@ const putUpdateCart = async(req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
-}
+  };
+};
 
 module.exports = {
   getCart,

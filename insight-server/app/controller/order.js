@@ -12,8 +12,8 @@ const postOrder = async(req, res, next) => {
       return res.status(400).json({
         error: 1,
         message: `You're not create order because you have not items in cart`
-      })
-    }
+      });
+    };
     let address = await DeliveryAddress.findById(delivery_address);
     let order = new Order({
       _id: new Types.ObjectId(),
@@ -50,9 +50,9 @@ const postOrder = async(req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 const getOrder = async(req, res, next) => {
@@ -79,9 +79,9 @@ const getOrder = async(req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
+  };
 };
 
 module.exports = {

@@ -16,7 +16,7 @@ const getDeliveryAddress = async (req, res, next) => {
       });
     }
     next(err);
-  }
+  };
 };
 
 const postDeliveryAddress = async (req, res, next) => {
@@ -34,10 +34,10 @@ const postDeliveryAddress = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
-}
+  };
+};
 
 const putUpdateDeliveryAddress = async (req, res, next) => {
   try {
@@ -52,7 +52,7 @@ const putUpdateDeliveryAddress = async (req, res, next) => {
         error: 1,
         message: `You're not allowed to modify this resource`
       });
-    }
+    };
 
     address = await DeliveryAddress.findByIdAndUpdate(id, payload, { new: true }
     );
@@ -65,10 +65,10 @@ const putUpdateDeliveryAddress = async (req, res, next) => {
         message: err.message,
         fields: err.errors
       });
-    }
+    };
     next(err);
-  }
-}
+  };
+};
 
 const deleteDeliveryAddressById = async (req, res, next) => {
   try {
@@ -82,7 +82,7 @@ const deleteDeliveryAddressById = async (req, res, next) => {
         error: 1,
         message: `You're not allowed to modify this resource`
       });
-    }
+    };
 
     address = await DeliveryAddress.findByIdAndDelete(id);
 
@@ -93,7 +93,7 @@ const deleteDeliveryAddressById = async (req, res, next) => {
 
   } catch (err) {
     next(err);
-  }
+  };
 };
 
 module.exports = {
