@@ -6,6 +6,9 @@ const accessControl = {
     can('read', 'Product')
   },
   user(user, {can}) {
+    can('create', 'Bank', {user_id: user._id});
+    can('update', 'Bank', {user_id: user._id});
+    can('delete', 'Bank', {user_id: user._id});
     can('read', 'Product');
     can('create', 'Product', {user_id: user._id});
     can('update', 'Product', {user_id: user._id});
