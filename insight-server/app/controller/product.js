@@ -16,7 +16,6 @@ const getAllProducts = async (req, res, next) => {
 
     if (category) {
       let categoryResult = await Category.find({name: {$in: category} });
-
       if (categoryResult) {
         criteria = { ...criteria, category: {$in: categoryResult.map(category => category._id)} }
       } else {
@@ -26,7 +25,6 @@ const getAllProducts = async (req, res, next) => {
 
     if (tags) {
       let tagsResult = await Tag.find({name: {$in: tags}});
-
       if (tagsResult.length > 0) {
         criteria = { ...criteria, tags: {$in: tagsResult.map(tag => tag._id)} }
       } else {
@@ -35,11 +33,10 @@ const getAllProducts = async (req, res, next) => {
     };
 
     let count = await Product.countDocuments(criteria);
-
     let products = await Product
-      .find(criteria)
-      .populate('category')
-      .populate('tags')
+        .find(criteria)
+        .populate('category')
+        .populate('tags')
     return res.status(200).json({
       data: products,
       count
@@ -78,9 +75,9 @@ const getProductsById = async (req, res, next) => {
     let count = await Product.countDocuments(criteria);
 
     let products = await Product
-    .find(criteria)
-    .populate('category')
-    .populate('tags')
+      .find(criteria)
+      .populate('category')
+      .populate('tags')
     return res.status(200).json({
       data: products,
       count
@@ -96,18 +93,25 @@ const postProducts = async (req, res, next) => {
     let payload = req.body;
 
     if (payload.category) {
-      let category = 
-        await Category.find({name: {$in: category} });
+      let category = await Category
+        .find({
+          name: {$in: category}
+        });
       if (category) {
-        payload = {...payload, category: category._id};
+        payload = {
+          ...payload, 
+          category: category._id
+        };
       } else {
         delete payload.category;
       };
     };
 
     if (payload.tags && payload.tags.length > 0) {
-      let tags = 
-        await Tag.find({name: {$in: payload.tags}});
+      let tags = await Tag
+        .find({
+          name: {$in: payload.tags}
+        });
       if (tags.length) {
         payload = {...payload, tags: tags.map(tag => tag._id)};
       } else {
@@ -127,9 +131,13 @@ const postProducts = async (req, res, next) => {
 
       src.on('end', async() => {
         try {
-          let product = new Product({...payload, image_url: filename})
+          let product = new Product({
+            ...payload, 
+            image_url: filename
+          })
           await product.save()
           return res.status(201).json(product);
+
         } catch(err) {
           fs.unlinkSync(target_path);
           if(err && err.name === 'ValidationError'){
@@ -171,8 +179,10 @@ const putUpdateProducts = async (req, res, next) => {
     let { id } = req.params;
 
     if (payload.category) {
-      let category = 
-        await Category.find({name: {$in: category} });
+      let category = await Category
+        .find({
+          name: {$in: category} 
+        });
       if (category) {
         payload = {...payload, category: category._id};
       } else {
@@ -181,10 +191,15 @@ const putUpdateProducts = async (req, res, next) => {
     };
 
     if (payload.tags && payload.tags.length > 0) {
-      let tags = 
-      await Tag.find({name: {$in: payload.tags}});
+      let tags = await Tag
+        .find({
+          name: {$in: payload.tags}
+        });
       if (tags.length) {
-        payload = {...payload, tags: tags.map(tag => tag._id)};
+        payload = {
+          ...payload, 
+          tags: tags.map(tag => tag._id)
+        };
       } else {
         delete payload.tags;
       };
@@ -209,10 +224,12 @@ const putUpdateProducts = async (req, res, next) => {
             fs.unlinkSync(currentImage);
           };
 
-          let product = await Product.findByIdAndUpdate(id, payload, {
-            new: true,
-            runValidators: true
-          });
+          let product = await Product
+            .findByIdAndUpdate(
+              id, 
+              payload, 
+              { new: true, runValidators: true }
+            );
           product.image_url = filename;
           await product.save();
           return res.status(200).json(product);
@@ -235,10 +252,12 @@ const putUpdateProducts = async (req, res, next) => {
       });
 
     } else {
-      let product = await Product.findByIdAndUpdate(id, payload, {
-        new: true,
-        runValidators: true
-      });
+      let product = await Product
+        .findByIdAndUpdate(
+          id, 
+          payload, 
+          { new: true, runValidators: true }
+        );
       return res.status(200).json(product);
     };
   } catch(err) {

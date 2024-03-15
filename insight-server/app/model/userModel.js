@@ -3,7 +3,7 @@ const { Schema, model } = mongoose;
 const bcrypt = require('bcrypt');
 
 let userSchema = Schema({
-  full_name: {
+  fullName: {
     type: String,
     required: [true, 'Field name harus diisi'],
     minlength: [3, 'Minimal 3 karakter'],
@@ -24,6 +24,13 @@ let userSchema = Schema({
     type: String,
     required: [true, 'Field password harus diisi'],
     maxlength: [255, 'Maksimal password 255 karakter']
+  },
+
+  phoneNumber: {
+    type: String,
+    required: [true, 'Field nomor handphone harus diisi'],
+    minlength: [9, 'Maksimal nomor handphone 9 karakter'],
+    maxlength: [15, 'Maksimal nomor handphone 15 karakter']
   },
 
   role: {

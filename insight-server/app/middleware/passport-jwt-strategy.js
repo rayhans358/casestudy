@@ -15,7 +15,7 @@ function decodeToken() {
       req.user = jwt.verify(token, config.secretkey);
 
       const decodedToken = jwt.decode(token, { complete: true });
-      console.log(decodedToken, '<<<< Decode Token');
+      // console.log(decodedToken, '<<<< Decode Token');
 
       let user = await User.findOne({token: {$in: [token]} });
       if (!user) {

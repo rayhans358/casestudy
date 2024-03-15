@@ -2,27 +2,33 @@ const mongoose = require('mongoose');
 const { model, Schema } = mongoose;
 
 const orderItemSchema = Schema({
-  name: {
+  cartName: {
     type: String,
-    required: [true, 'Field name tidak boleh kosong'],
-    minlength: [5, 'Field name minimal 5 karakter']
+    minlength: [5, 'Field name minimal 5 karakter'],
+    required: [true, 'Name item tidak boleh kosong']
   },
-  price: {
+
+  unit_price: {
     type: Number,
-    required: [true, 'Field harga item tidak boleh kosong']
+    required: [true, 'Harga item tidak boleh kosong']
   },
+
   qty: {
     type: Number,
-    required: [true, 'Field qty tidak boleh kosong'],
-    min: [1, 'Kuantitas minimal 1']
+    min: [1, 'Kuantitas minimal 1'],
+    required: [true, 'Qty tidak boleh kosong']
   },
+
   product: {
     type: Schema.Types.ObjectId,
-    ref: 'Product'
+    ref: 'Product',
+    required: [true, 'Product tidak boleh kosong']
   },
+  
   order: {
     type: Schema.Types.ObjectId,
-    ref: 'Order'
+    ref: 'Order',
+    required: [true, 'Order tidak boleh kosong']
   }
 });
 

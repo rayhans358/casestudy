@@ -66,7 +66,12 @@ const putUpdateCategory = async (req, res, next) => {
 
   try {
     let payload = req.body;
-    let category = await Category.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+    let category = await Category
+      .findByIdAndUpdate(
+        id, 
+        payload, 
+        { new: true, runValidators: true }
+      );
     return res.status(200).json(category);
 
   } catch (err) {

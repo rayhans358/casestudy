@@ -27,15 +27,14 @@ const register = async(req, res, next) => {
 
 const localStrategy = async (email, password, done) => {
   try {
-    let user = 
-      await User
+    let user = await User
       .findOne({email})
       .select('-__v -createdAt -updatedAt -cart_items -token');
-      if (!user) return done();
-      if (bcrypt.compareSync(password, user.password)) {
-        ( {password, ...userWithoutPassword} = user.toJSON() );
-        return done(null, userWithoutPassword);
-      };
+    if (!user) return done();
+    if (bcrypt.compareSync(password, user.password)) {
+      ( {password, ...userWithoutPassword} = user.toJSON() );
+      return done(null, userWithoutPassword);
+    };
 
   } catch (err) {
     done(err,null)
@@ -56,7 +55,11 @@ const login = (req, res, next) => {
 
     let signed = jwt.sign(user, config.secretkey);
 
-    await User.findByIdAndUpdate(user._id, {$push: {token: signed}});
+    await User
+      .findByIdAndUpdate(
+        user._id, 
+        {$push: {token: signed}}
+      );
 
     res.status(200).json({
       message: 'Login Successfully',
@@ -69,7 +72,12 @@ const login = (req, res, next) => {
 const logout = async (req,res, next) => {
   let token = getToken(req);
 
-  let user = await User.findOneAndUpdate({token: {$in: [token]}}, {$pull: {token: token}}, {useFindAndModify: false});
+  let user = await User
+    .findOneAndUpdate(
+      {token: {$in: [token]}}, 
+      {$pull: {token: token}}, 
+      {useFindAndModify: false}
+    );
 
   if (!token || !user) {
     res.status(400).json({
@@ -95,10 +103,68 @@ const me = (req, res, next) => {
   res.status(200).json(req.user);
 };
 
+const getUserInfo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userInfo = await User
+      .findById(id)
+      .select('fullName email phoneNumber');
+
+    if (!userInfo) {
+      return res.status(404).json({
+        error: 1,
+        message: 'User not found'
+      });
+    };
+
+    res.status(200).json(userInfo);
+
+  } catch (err) {
+    next(err);
+    console.error('Error fetching user info:', err);
+    res.status(500).json({
+      error: 1,
+      message: 'Internal server error'
+    });
+  };
+};
+
+const editUser = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    let { fullName, email, phoneNumber } = req.body;
+
+    const updatedUser = await User
+    .findOneAndUpdate(
+      { _id: id },
+      { fullName, email, phoneNumber },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        error: 1,
+        message: "User not found"
+      });
+    };
+
+    return res.status(200).json(updatedUser);
+
+  } catch (err) {
+    next(err);
+    return res.status(500).json({
+      error: 1,
+      message: "Internal server error"
+    });
+  };
+};
+
 module.exports = {
   register,
   localStrategy,
   login,
   logout,
-  me
+  me,
+  getUserInfo,
+  editUser
 }

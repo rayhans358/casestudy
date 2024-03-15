@@ -5,7 +5,10 @@ const Invoice = require("../model/invoiceModel");
 const getInvoice = async(req, res, next) => {
   try {
     let policy = policyFor(req.user);
-    let subjectInvoice = subject('Invoice', {...invoice, user_id: invoice.user._id});
+    let subjectInvoice = subject('Invoice', {
+      ...invoice, 
+      user_id: invoice.user._id
+    });
     if (!policy.can('read', subjectInvoice)) {
       return res.status(400).json({
         error: 1,
@@ -15,8 +18,7 @@ const getInvoice = async(req, res, next) => {
 
     let { order_id } = req.params;
     let orderId = { order: order_id }
-    let invoice = 
-      await Invoice
+    let invoice = await Invoice
       .findOne(orderId)
       .populate('order')
       .populate('user');
@@ -31,7 +33,7 @@ const getInvoice = async(req, res, next) => {
     return res.status(200).json(invoice);
     
   } catch (err) {
-    if (err & err.name === 'ValidationError') {
+    if (err && err.name === 'ValidationError') {
       return res.status(400).json({
         error: 1,
         message: err.message,

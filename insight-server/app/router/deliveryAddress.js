@@ -7,6 +7,11 @@ router.get('/',
   deliveryAddressController.getDeliveryAddress
 );
 
+router.get('/:id',
+  checkAuthorization('view', 'DeliveryAddress'),
+  deliveryAddressController.getDeliveryAddressById
+);
+
 router.post('/',
   checkAuthorization('create', 'DeliveryAddress'),
   deliveryAddressController.postDeliveryAddress

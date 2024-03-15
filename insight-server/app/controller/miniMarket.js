@@ -1,17 +1,17 @@
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
-const Bank = require("../model/bankModel");
+const MiniMarket = require('../model/miniMarketModel');
 
-const getAllBanks = async (req, res, next) => {
+const getAllMiniMarkets = async (req, res, next) => {
   try {
-    const banks = await Bank.find();
+    const miniMarket = await MiniMarket.find();
     return res.status(200).json({ 
-      data: banks 
+      data: miniMarket 
     });
 
   } catch (err) {
-    console.error('Error getting all bank data:', err);
+    console.error('Error getting all mini market data:', err);
     next(err);
     return res.status(500).json({
       err: 'Internal Server Error' 
@@ -19,7 +19,7 @@ const getAllBanks = async (req, res, next) => {
   };
 };
 
-const postNameBanks = async(req, res, next) => {
+const postNameMiniMarkets = async(req, res, next) => {
   try {
     const payload = req.body;
 
@@ -33,7 +33,7 @@ const postNameBanks = async(req, res, next) => {
       const temp_path = req.file.path;
       const originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
       const filename = req.file.filename + '.' + originalExt;
-      const target_path = path.resolve(config.rootpath, `public/images/banks/${filename}`);
+      const target_path = path.resolve(config.rootpath, `public/images/mini-markets/${filename}`);
 
       const src = fs.createReadStream(temp_path);
       const dest = fs.createWriteStream(target_path);
@@ -41,13 +41,13 @@ const postNameBanks = async(req, res, next) => {
 
       src.on('end', async() => {
         try {
-          const newBank = new Bank({
+          const newMiniMarket = new MiniMarket({
             ...payload, 
             image_url: filename
           })
-          await newBank.save()
+          await newMiniMarket.save()
           return res.status(201).json({ 
-            data: newBank 
+            data: newMiniMarket 
           });
 
         } catch(err) {
@@ -61,15 +61,15 @@ const postNameBanks = async(req, res, next) => {
       });
       
     } else {
-      const newBank = new Bank(payload);
-      await newBank.save();
+      const newMiniMarket = new MiniMarket(payload);
+      await newMiniMarket.save();
       return res.status(201).json({ 
-        data: newBank 
+        data: newMiniMarket 
       });
     };
 
   } catch (err) {
-    console.error('Error saving bank data:', err);
+    console.error('Error saving mini market data:', err);
     next(err);
     return res.status(500).json({ 
       err: 'Internal Server Error' 
@@ -77,7 +77,7 @@ const postNameBanks = async(req, res, next) => {
   };
 };
 
-const putUpdateBanks = async(req, res, next) => {
+const putUpdateMiniMarkets = async(req, res, next) => {
   try {
     const { id } = req.params;
     const payload = req.body;
@@ -86,10 +86,10 @@ const putUpdateBanks = async(req, res, next) => {
       const temp_path = req.file.path;
       const originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
       const filename = req.file.filename + '.' + originalExt;
-      const target_path = path.resolve(config.rootpath, `public/images/banks/${filename}`);
+      const target_path = path.resolve(config.rootpath, `public/images/mini-markets/${filename}`);
 
-      const updateBank = await Bank.findById(id);
-      const currentImage = `${config.rootpath}/public/images/banks/${updateBank.image_url}`; 
+      const updateMiniMarket = await MiniMarket.findById(id);
+      const currentImage = `${config.rootpath}/public/images/mini-markets/${updateMiniMarket.image_url}`; 
 
       const src = fs.createReadStream(temp_path);
       const dest = fs.createWriteStream(target_path);
@@ -101,15 +101,15 @@ const putUpdateBanks = async(req, res, next) => {
             fs.unlinkSync(currentImage);
           };
 
-          const updateBank = await Bank.findByIdAndUpdate(
+          const updateMiniMarket = await MiniMarket.findByIdAndUpdate(
             id, 
             payload, 
             { new: true }
           );
-          updateBank.image_url = filename;
-          await updateBank.save();
+          updateMiniMarket.image_url = filename;
+          await updateMiniMarket.save();
           return res.status(200).json({ 
-            data: updateBank
+            data: updateMiniMarket
           });
 
         } catch(err) {
@@ -123,25 +123,25 @@ const putUpdateBanks = async(req, res, next) => {
       });
 
     } else {
-      const updateBank = await Bank.findByIdAndUpdate(
+      const updateMiniMarket = await MiniMarket.findByIdAndUpdate(
         id, 
         payload, 
         { new: true }
       );
 
-      if (!updateBank) {
+      if (!updateMiniMarket) {
         return res.status(404).json({
-          err: 'Bank not found'
+          err: 'Mini Market not found'
         });
       };
 
       return res.status(200).json({ 
-        data: updateBank
+        data: updateMiniMarket
       });
     };
 
   } catch (err) {
-    console.error('Error updating bank data:', err);
+    console.error('Error updating mini market data:', err);
     next(err);
     return res.status(500).json({ 
       err: 'Internal Server Error' 
@@ -149,15 +149,15 @@ const putUpdateBanks = async(req, res, next) => {
   };
 };
 
-const deleteBanksById = async(req, res, next) => {
+const deleteMiniMarketById = async(req, res, next) => {
   try {
     const { id } = req.params;
-    const deleteBank = await Bank.findByIdAndDelete(id);
-    const currentImage = `${config.rootpath}/public/images/banks/${deleteBank.image_url}`;
+    const deleteMiniMarket = await MiniMarket.findByIdAndDelete(id);
+    const currentImage = `${config.rootpath}/public/images/mini-markets/${deleteMiniMarket.image_url}`;
 
-    if (!deleteBank) {
+    if (!deleteMiniMarket) {
       return res.status(404).json({ 
-        error: 'Bank not found' 
+        error: 'MiniMarket not found' 
       });
     };
 
@@ -166,11 +166,11 @@ const deleteBanksById = async(req, res, next) => {
     };
 
     return res.status(200).json({ 
-      data: deleteBank 
+      data: deleteMiniMarket 
     });
 
   } catch (err) {
-    console.error('Error deleting bank by id:', err);
+    console.error('Error deleting mini market by id:', err);
     next(err);
     return res.status(500).json({ 
       err: 'Internal Server Error' 
@@ -179,8 +179,8 @@ const deleteBanksById = async(req, res, next) => {
 };
 
 module.exports = {
-  getAllBanks,
-  postNameBanks,
-  putUpdateBanks,
-  deleteBanksById
+  getAllMiniMarkets,
+  postNameMiniMarkets,
+  putUpdateMiniMarkets,
+  deleteMiniMarketById
 }

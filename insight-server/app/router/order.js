@@ -10,7 +10,7 @@ router.get(
 
 router.post(
   '/',
-  checkAuthorization('update', 'Order'),
+  checkAuthorization('create', 'Order'),
   orderController.postOrder
 );
 

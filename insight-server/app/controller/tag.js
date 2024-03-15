@@ -6,7 +6,7 @@ const getTag = async (req, res, next) => {
     return res.status(200).json(tag);
 
   } catch (err) {
-    if (err & err.name === 'ValidationError') {
+    if (err && err.name === 'ValidationError') {
       return res.status(400).json({
         error: 1,
         message: err.message,
@@ -50,7 +50,7 @@ const postTag = async (req, res, next) => {
     return res.status(201).json(tag);
 
   } catch (err) {
-    if (err & err.name === 'ValidationError') {
+    if (err && err.name === 'ValidationError') {
       return res.status(400).json({
         error: 1,
         message: err.message,
@@ -66,11 +66,15 @@ const putUpdateTag = async (req, res, next) => {
 
   try {
     let payload = req.body;
-    let tag = await Tag.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+    let tag = await Tag.findByIdAndUpdate(
+      id, 
+      payload, 
+      { new: true, runValidators: true }
+      );
     return res.status(200).json(tag);
 
   } catch (err) {
-    if (err & err.name === 'ValidationError') {
+    if (err && err.name === 'ValidationError') {
       return res.status(400).json({
         error: 1,
         message: err.message,
@@ -89,7 +93,7 @@ const deleteTagByid = async (req, res, next) => {
     return res.status(200).json(tag);
 
   } catch (err) {
-    if (err & err.name === 'ValidationError') {
+    if (err && err.name === 'ValidationError') {
       return res.status(400).json({
         error: 1,
         message: err.message,
