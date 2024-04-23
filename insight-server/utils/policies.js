@@ -9,6 +9,9 @@ const accessControl = {
     can('create', 'Bank', {user_id: user._id});
     can('update', 'Bank', {user_id: user._id});
     can('delete', 'Bank', {user_id: user._id});
+    can('create', 'MiniMarket', {user_id: user._id});
+    can('update', 'MiniMarket', {user_id: user._id});
+    can('delete', 'MiniMarket', {user_id: user._id});
     can('read', 'Product');
     can('create', 'Product', {user_id: user._id});
     can('update', 'Product', {user_id: user._id});
@@ -22,7 +25,7 @@ const accessControl = {
     can('update', 'Tag', {user_id: user._id});
     can('delete', 'Tag', {user_id: user._id});
     can('view', 'Order');
-    can('create', 'Order');
+    can('create', 'Order', {user_id: user._id});
     can('read', 'Order', {user_id: user._id});
     can('update', 'User', {_id: user._id});
     can('read', 'Cart', {user_id: user._id});

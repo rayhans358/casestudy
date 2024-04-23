@@ -1,24 +1,19 @@
 const { Types } = require("mongoose");
-const CartItem = require("../model/cartItemModel");
 const DeliveryAddress = require("../model/deliveryAddressModel");
+const CartItem = require("../model/cartItemModel");
 const Order = require("../model/orderModel");
 const OrderItem = require("../model/orderItemModel");
 
 const postOrder = async(req, res, next) => {
+  const { 
+    delivery_courier, 
+    delivery_fee, 
+    delivery_address, 
+    order_items,
+    paymentMethod 
+  } = req.body;
+
   try {
-    let {delivery_fee, delivery_address, delivery_courier} = req.body;
-    let items = await CartItem
-      .find({user: req.user._id})
-      .populate('product')
-    console.log(items, 'items');
-
-    if (!items || items.length === 0) {
-      return res.status(400).json({
-        error: 1,
-        message: `Anda belum membuat pesanan karena tidak ada item dalam keranjang`
-      });
-    };
-
     let address = await DeliveryAddress.findById(delivery_address);
 
     if (!address) {
@@ -29,10 +24,19 @@ const postOrder = async(req, res, next) => {
     };
 
     let user = req.user._id
+    let totalQty = 0;
+    let subTotal = 0;
+    let totalShopping = 0;
+    
+    for (let item of order_items) {
+      subTotal += parseInt(item.price) * parseInt(item.qty);
+    }
+    totalQty = order_items.reduce((total, item) => total + parseInt(item.qty), 0);
+    totalShopping += subTotal + parseInt(delivery_fee);
+
     let order = new Order({
       user: user,
       _id: new Types.ObjectId(),
-      status: 'waiting_payment',
       delivery_courier: delivery_courier,
       delivery_fee: delivery_fee,
       delivery_address: {
@@ -43,28 +47,31 @@ const postOrder = async(req, res, next) => {
         kecamatan: address.kecamatan,
         kabupaten: address.kabupaten,
         provinsi: address.provinsi
-      }
+      },
+      totalQty: totalQty,
+      subTotal: subTotal,
+      totalShopping: totalShopping,
+      paymentMethod: paymentMethod.name,
+      status: 'waiting_payment',
     });
+    
     let orderItems = await OrderItem
-        .insertMany(items.map(item => ({
-          ...item.toObject(),
+        .insertMany(order_items.map(item => ({
           order: order._id,
-          cartName: item.product.name,
-          unit_price: parseInt(item.product.price),
+          name: item.name,
+          price: parseInt(item.price),
           qty: parseInt(item.qty),
-          product: item.product._id
+          product: item.product
         })));
 
-    orderItems.forEach(item => order.order_items.push(item._id))
+    orderItems.forEach(item => order.order_items.push(item))
     await order.save();
-    console.log(order, 'order');
-    console.log(orderItems, 'orderItems');
     await CartItem.deleteMany({user: req.user._id});
     return res.status(201).json(order);
     
   } catch (err) {
+    console.log(err, 'err');
     if (err && err.name === 'ValidationError') {
-      console.log(err, 'err');
       return res.status(400).json({
         error: 1,
         message: err.message,
@@ -77,19 +84,17 @@ const postOrder = async(req, res, next) => {
 
 const getOrder = async(req, res, next) => {
   try {
-    let { skip = 0, limit = 10 } = req.query;
-    let user = {user: req.user._id}
-    console.log(user);
-    console.log(req.user._id);
-    let count = await Order.find(user).countDocuments();
+    const userId = req.user._id;
+    console.log(userId, 'userId');
+    let count = await Order
+      .find({ user: userId })
+      .countDocuments();
     console.log(count, 'CN');
     let orders = 
       await Order
-        .find(user)
-        .skip(parseInt(skip))
-        .limit(parseInt(limit))
+        .find({ user: userId })
         .populate('order_items')
-        .sort('-createdAt');
+        .sort('createdAt');
     return res.status(200).json({
       data: orders.map(order => order.toJSON({virtuals: true})),
       count

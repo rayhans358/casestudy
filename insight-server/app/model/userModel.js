@@ -70,7 +70,7 @@ userSchema.pre('save', async function (next) {
     if (highestCustomerIdUser && highestCustomerIdUser.customer_id !== null) {
       this.customer_id = highestCustomerIdUser.customer_id + 1;
     } else {
-      this.customer_id = 1; // Nilai default untuk pengguna pertama
+      this.customer_id = 1;
     }
   }
   next();

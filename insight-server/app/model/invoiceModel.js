@@ -2,9 +2,8 @@ const mongoose = require('mongoose');
 const { model, Schema } = mongoose;
 
 const invoiceSchema = Schema({
-  totalPrice: {
-    type: Number,
-    required: [true, 'Field total_price tidak boleh kosong']
+  delivery_courier: {
+    type: String
   },
 
   delivery_fee: {
@@ -12,21 +11,51 @@ const invoiceSchema = Schema({
     default: 0
   },
 
-  delivery_courier: {
-    type: String
+  delivery_address: {
+    fullStreet: {
+      type: String
+    },
+
+    fullName: {
+      type: String
+    },
+  
+    phoneNumber: {
+      type: String
+    },
+    
+    kelurahan: { 
+      type: String
+    },
+
+    kecamatan: { 
+      type: String
+    },
+
+    kabupaten: { 
+      type: String
+    },
+
+    provinsi: { 
+      type: String
+    },
   },
 
-  delivery_address: {
-    provinsi: { type: String },
-    kabupaten: { type: String },
-    kecamatan: { type: String },
-    kelurahan: { type: String },
-    fullStreet: { type: String }
+  totalQty: {
+    type: Number
+  },
+
+  subTotal: {
+    type: Number
   },
 
   totalShopping: {
-    type: Number,
-    required: [true, 'Field total tidak boleh kosong']
+    type: Number
+  },
+
+  paymentMethod: {
+    type: String,
+    required: true
   },
 
   payment_status: {
@@ -40,10 +69,10 @@ const invoiceSchema = Schema({
     ref: 'User'
   },
 
-  order: [{
+  order: {
     type: Schema.Types.ObjectId,
     ref: 'Order'
-  }]
+  }
 }, {timestamps: true});
 
 const Invoice = model('Invoice', invoiceSchema);

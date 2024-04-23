@@ -8,6 +8,10 @@ router.get('/',
   bankController.getAllBanks
 );
 
+router.get('/:id',
+  bankController.getBankById
+);
+
 router.post('/',
   multer({dest: os.tmpdir()}).single('image'),
   checkAuthorization('create', 'Bank'),

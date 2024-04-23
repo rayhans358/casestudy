@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const { model, Schema } = mongoose;
 
 const orderItemSchema = Schema({
-  cartName: {
+  name: {
     type: String,
     minlength: [5, 'Field name minimal 5 karakter'],
     required: [true, 'Name item tidak boleh kosong']
   },
 
-  unit_price: {
+  price: {
     type: Number,
     required: [true, 'Harga item tidak boleh kosong']
   },

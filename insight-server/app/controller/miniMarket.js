@@ -5,13 +5,35 @@ const MiniMarket = require('../model/miniMarketModel');
 
 const getAllMiniMarkets = async (req, res, next) => {
   try {
-    const miniMarket = await MiniMarket.find();
+    const miniMarkets = await MiniMarket.find();
     return res.status(200).json({ 
-      data: miniMarket 
+      data: miniMarkets 
     });
 
   } catch (err) {
     console.error('Error getting all mini market data:', err);
+    next(err);
+    return res.status(500).json({
+      err: 'Internal Server Error' 
+    });
+  };
+};
+
+const getMiniMarketById = async (req, res, next) => {
+  try {
+    const miniMarketId = req.req.params.id;
+    const miniMarket = await MiniMarket.findById(miniMarketId);
+    if (!miniMarket) {
+      return res.status(404).json({ 
+        error: 'Mini Market not found' 
+      });
+    };
+    return res.status(200).json({
+      data: miniMarket
+    });
+    
+  } catch (wee) {
+    console.error('Error getting mini market by id:', err);
     next(err);
     return res.status(500).json({
       err: 'Internal Server Error' 
@@ -149,7 +171,7 @@ const putUpdateMiniMarkets = async(req, res, next) => {
   };
 };
 
-const deleteMiniMarketById = async(req, res, next) => {
+const deleteMiniMarketsById = async(req, res, next) => {
   try {
     const { id } = req.params;
     const deleteMiniMarket = await MiniMarket.findByIdAndDelete(id);
@@ -180,7 +202,8 @@ const deleteMiniMarketById = async(req, res, next) => {
 
 module.exports = {
   getAllMiniMarkets,
+  getMiniMarketById,
   postNameMiniMarkets,
   putUpdateMiniMarkets,
-  deleteMiniMarketById
+  deleteMiniMarketsById
 }

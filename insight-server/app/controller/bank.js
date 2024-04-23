@@ -19,6 +19,28 @@ const getAllBanks = async (req, res, next) => {
   };
 };
 
+const getBankById = async (req, res, next) => {
+  try {
+    const bankId = req.params.id;
+    const bank = await Bank.findById(bankId);
+    if (!bank) {
+      return res.status(404).json({ 
+        error: 'Bank not found' 
+      });
+    };
+    return res.status(200).json({ 
+      data: bank 
+    });
+
+  } catch (err) {
+    console.error('Error getting bank by id:', err);
+    next(err);
+    return res.status(500).json({ 
+      err: 'Internal Server Error' 
+    });
+  };
+};
+
 const postNameBanks = async(req, res, next) => {
   try {
     const payload = req.body;
@@ -180,6 +202,7 @@ const deleteBanksById = async(req, res, next) => {
 
 module.exports = {
   getAllBanks,
+  getBankById,
   postNameBanks,
   putUpdateBanks,
   deleteBanksById
