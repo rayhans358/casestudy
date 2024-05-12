@@ -9,7 +9,7 @@ router.get('/',
   productController.getAllProducts
 );
 
-router.get('/', 
+router.get('/:id', 
   checkAuthorization('read', 'Product'),
   productController.getProductsById
 );
