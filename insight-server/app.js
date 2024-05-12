@@ -4,8 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
-const indexRouter = require('../app/router/index');
-const {decodeToken} = require('../app/middleware/passport-jwt-strategy');
+const indexRouter = require('./app/router/index');
+const {decodeToken} = require('./app/middleware/passport-jwt-strategy');
 
 var app = express();
 
