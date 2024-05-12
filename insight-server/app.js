@@ -15,7 +15,7 @@ app.set('view engine', 'pug');
 
 app.use(cors(
   {
-    origin: ["https://deploy-mern-frontend.vercel.app"],
+    origin: ["https://insight-coffee.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true
   }
