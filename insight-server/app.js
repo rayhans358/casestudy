@@ -16,7 +16,7 @@ app.set('view engine', 'pug');
 app.use(cors(
   {
     origin: ["https://insight-coffee.vercel.app"],
-    methods: ["POST", "GET"],
+    methods: ["GET", "POST", "CREATE", "UPDATE"],
     credentials: true
   }
 ));
