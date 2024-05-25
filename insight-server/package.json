@@ -9,7 +9,6 @@
     "@casl/ability": "^6.5.0",
     "base64-vlq": "^0.0.5",
     "bcrypt": "^5.1.1",
-    "clean-css": "^5.3.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "daftar-wilayah-indonesia": "^4.0.3",
@@ -27,7 +26,6 @@
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pug": "2.0.0-beta11",
-    "source-map": "^0.7.4"
+    "pug": "2.0.0-beta11"
   }
 }
