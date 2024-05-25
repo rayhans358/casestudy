@@ -3,15 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "SET DEBUG=insight-server:* && nodemon ./bin/www"
+    "start": "cross-env DEBUG=insight-server:* && node ./bin/www"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
-    "@lib/base64-vlq": "^0.1.1",
-    "base64-vlq": "^0.0.5",
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "daftar-wilayah-indonesia": "^4.0.3",
     "debug": "~2.6.9",
     "dotenv": "^16.3.1",
