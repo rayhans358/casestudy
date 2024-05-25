@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "version":2,
+  "buildCommand": "npm run start",
   "outputDirectory": "dist",
   "framework": "@vercel/node",
   "builds": [
