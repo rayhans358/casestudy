@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/insight-server/app.js"
+      "dest": "/bin/www"
     }
   ]
 }
