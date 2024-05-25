@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require("../root");
+var app = require("../app");
 var debug = require("debug")("insight-server:server");
 var http = require("http");
 const db = require("../database");
