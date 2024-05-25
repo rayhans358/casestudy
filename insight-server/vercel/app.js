@@ -4,16 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
-const indexRouter = require("./app/router/index");
-const { decodeToken } = require("./app/middleware/passport-jwt-strategy");
-
-// Manual import check for base64-vlq
-try {
-  const base64VLQ = require("source-map/lib/base64-vlq");
-  console.log("base64-vlq module loaded successfully");
-} catch (err) {
-  console.error("Failed to load base64-vlq module:", err);
-}
+const indexRouter = require("../app/router/index");
+const { decodeToken } = require("../app/middleware/passport-jwt-strategy");
 
 var app = express();
 
